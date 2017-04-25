@@ -8,4 +8,4 @@ $Dir = "D:\Users"
 
 # END CONFIG
 
-Get-ChildItem -Path $Dir -Recurse | where {$_.LastWriteTime -le $(get-date).AddDays(-$Days)} | Remove-Item
+Get-ChildItem -Path $Dir -Recurse -exclude *.mds | where {$_.LastWriteTime -le $(get-date).AddDays(-$Days)} | Remove-Item
