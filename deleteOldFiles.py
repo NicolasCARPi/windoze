@@ -2,19 +2,25 @@
 # Delete files older than 30 days that ends with .tif
 import os
 import datetime
+import logging
 import sys
 
 if len(sys.argv) != 2:
     print("Usage: python deleteOldFiles.py /path/to/folder")
     exit()
 
-workdir = sys.argv[1]
-olderThanDays = 30
+OLDERTHANDAYS = 30
+WORKDIR = sys.argv[1]
 
-for dirpath, dirnames, filenames in os.walk(workdir):
+logging.basicConfig(filename=WORKDIR + os.sep + 'deleteOldFiles.log', level=logging.DEBUG)
+
+for dirpath, dirnames, filenames in os.walk(WORKDIR):
     for file in filenames:
         curpath = os.path.join(dirpath, file)
         file_modified = datetime.datetime.fromtimestamp(os.path.getmtime(curpath))
-        if datetime.datetime.now() - file_modified > datetime.timedelta(days=olderThanDays) and curpath.endswith('.TIF'):
-            os.unlink(curpath)
-            print("removed {}".format(curpath))
+        if datetime.datetime.now() - file_modified > datetime.timedelta(days=OLDERTHANDAYS) and curpath.endswith('.TIF'):
+            if os.unlink(curpath):
+                logging.info("[{}] removed file: {}".format(datetime.date.strftime(datetime.datetime.now(), '%c'), curpath))
+            else:
+                logging.error("[{}] ERROR removing file: {}".format(datetime.date.strftime(datetime.datetime.now(), '%c'), curpath))
+
