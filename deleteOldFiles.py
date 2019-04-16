@@ -19,8 +19,5 @@ for dirpath, dirnames, filenames in os.walk(WORKDIR):
         curpath = os.path.join(dirpath, file)
         file_modified = datetime.datetime.fromtimestamp(os.path.getmtime(curpath))
         if datetime.datetime.now() - file_modified > datetime.timedelta(days=OLDERTHANDAYS) and curpath.endswith('.TIF'):
-            if os.unlink(curpath):
-                logging.info("[{}] removed file: {}".format(datetime.date.strftime(datetime.datetime.now(), '%c'), curpath))
-            else:
-                logging.error("[{}] ERROR removing file: {}".format(datetime.date.strftime(datetime.datetime.now(), '%c'), curpath))
-
+            os.unlink(curpath)
+            logging.info("[{}] removed file: {}".format(datetime.date.strftime(datetime.datetime.now(), '%c'), curpath))
